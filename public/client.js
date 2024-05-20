@@ -39,7 +39,7 @@ btnJoinBroadcaster.onclick = function () {
     broadcasterName.innerText = user.name + " is broadcasting...";
 
     navigator.mediaDevices
-      .getUserMedia(streamConstraints)
+      .getDisplayMedia(streamConstraints)
       .then(function (stream) {
         videoElement.srcObject = stream;
         socket.emit("register as broadcaster", user.room);
