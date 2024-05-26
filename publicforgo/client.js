@@ -42,6 +42,7 @@ const inputRoomNumber = document.getElementById("roomNumber");
 const btnJoinBroadcaster = document.getElementById("joinBroadcaster");
 const btnJoinViewer = document.getElementById("joinViewer");
 const videoElement = document.querySelector("video");
+const audioElement = document.querySelector("audio");
 const broadcasterName = document.getElementById("broadcasterName");
 const viewers = document.getElementById("viewers");
 
@@ -171,7 +172,11 @@ socket.on("offer", function (broadcaster, sdp) {
     });
 
   rtcPeerConnections[broadcaster.id].ontrack = (event) => {
-    videoElement.srcObject = event.streams[0];
+    if (event.track.kind == 'video') {
+      videoElement.srcObject = event.streams[0];
+    } else {
+      audioElement.srcObject = event.streams[0];
+    }
   };
 
   rtcPeerConnections[broadcaster.id].onicecandidate = (event) => {
