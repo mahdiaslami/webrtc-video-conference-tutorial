@@ -101,6 +101,40 @@ func initSocket() {
 		}
 		rtcPeerConnections[viewerId] = peerConnection
 
+		// // Create DataChannel.
+		_, err = peerConnection.CreateDataChannel("foo", nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// sendChannel.OnClose(func() {
+		// 	fmt.Println("sendChannel has closed")
+		// })
+		// sendChannel.OnOpen(func() {
+		// 	fmt.Println("sendChannel has opened")
+
+		// 	candidatePair, err := peerConnection.SCTP().Transport().ICETransport().GetSelectedCandidatePair()
+
+		// 	fmt.Println(candidatePair)
+		// 	fmt.Println(err)
+		// })
+		// sendChannel.OnMessage(func(msg webrtc.DataChannelMessage) {
+		// 	fmt.Println(sendChannel.Label(), string(msg.Data))
+		// })
+
+		peerConnection.OnDataChannel(func(dc *webrtc.DataChannel) {
+			fmt.Println("on data channel")
+
+			dc.OnClose(func() {
+				fmt.Println("dc has closed")
+			})
+			dc.OnOpen(func() {
+				fmt.Println("dc has opened")
+			})
+			dc.OnMessage(func(msg webrtc.DataChannelMessage) {
+				fmt.Println(dc.Label(), string(msg.Data))
+			})
+		})
+
 		for _, track := range stream.GetTracks() {
 			track.OnEnded(func(err error) {
 				fmt.Printf("Track (ID: %s) ended with error: %v\n",

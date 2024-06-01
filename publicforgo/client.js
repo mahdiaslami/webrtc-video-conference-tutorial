@@ -156,6 +156,18 @@ socket.on("offer", function (broadcaster, sdp) {
 
   rtcPeerConnections[broadcaster.id] = new RTCPeerConnection(iceServers);
 
+  const sendChannel = rtcPeerConnections[broadcaster.id].createDataChannel('foo')
+  sendChannel.onclose = () => console.log('sendChannel has closed')
+  sendChannel.onopen = () => console.log('sendChannel has opened')
+  sendChannel.onmessage = e => log(`Message from DataChannel '${sendChannel.label}' payload '${e.data}'`)
+
+  setInterval(() => {
+    if (sendChannel.readyState === "open") {
+      sendChannel.send("data channel message")
+    }
+    console.log(sendChannel.readyState)
+  }, 1000)
+
   rtcPeerConnections[broadcaster.id].setRemoteDescription(sdp);
 
   rtcPeerConnections[broadcaster.id]
