@@ -49,6 +49,7 @@ func main() {
 func initWebRTCAPI() {
 	mediaEngine := webrtc.MediaEngine{}
 
+	// -- VP8 ------------------------------------------------------------------
 	vpxParams, err := vpx.NewVP8Params()
 	if err != nil {
 		panic(err)
@@ -59,6 +60,18 @@ func initWebRTCAPI() {
 	codecSelector := mediadevices.NewCodecSelector(
 		mediadevices.WithVideoEncoders(&vpxParams),
 	)
+
+	// -- x264 -----------------------------------------------------------------
+	// x264Params, err := x264.NewParams()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// x264Params.BitRate = 500_000 // 500kbps
+	// x264Params.KeyFrameInterval = 120
+
+	// codecSelector := mediadevices.NewCodecSelector(
+	// 	mediadevices.WithVideoEncoders(&x264Params),
+	// )
 
 	codecSelector.Populate(&mediaEngine)
 	rtcapi = webrtc.NewAPI(webrtc.WithMediaEngine(&mediaEngine))
